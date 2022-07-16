@@ -129,10 +129,7 @@ def main():
         elif message["type"] == "fill":
             print(message)
             exchange.send_add_message(
-                order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
-            global_id_increment()
-            exchange.send_add_message(
-                order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
+                order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
             global_id_increment()
         elif message["type"] == "book":
             if message["symbol"] == "VALE":
