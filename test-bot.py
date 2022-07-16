@@ -102,7 +102,7 @@ def valbz_to_vale(exchange, curr_price, curr_size):
 
 def vale_to_valbz(exchange, curr_price, curr_size):
     # valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
-    if abs(OPENORDER['vale'] - HOLDINGS["vale"]) <= 10:
+    if abs(OPENORDER['valbz'] - HOLDINGS["valbz"]) <= 10:
         OPENORDER['vale'] -= curr_size
         exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
         response = exchange.read_message()
