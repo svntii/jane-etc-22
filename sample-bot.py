@@ -98,11 +98,11 @@ def main():
     global_id_increment()
 
     exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=996, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
     global_id_increment()
 
     exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=995, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
     global_id_increment()
 
     exchange.send_add_message(
@@ -118,11 +118,11 @@ def main():
     global_id_increment()
 
     exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1004, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
     global_id_increment()
 
     exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1005, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
     global_id_increment()
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
