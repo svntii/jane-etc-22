@@ -48,7 +48,6 @@ def bond_sell(exchange, curr_price, curr_size):
     print(response)
 
 
-
 def vale_buy(exchange, curr_price, curr_size):
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
                               price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
@@ -63,7 +62,6 @@ def vale_sell(exchange, curr_price, curr_size):
     print(response)
 
 
-
 def val_check(exchange, curr_valbz, curr_vale, range_val):
     '''
         look at valbz
@@ -74,23 +72,19 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
             if SELL of vale > valbz -> SELL (RANGE)
 
             RANGE:
-            
+
             if the spread is wide try to get the lowest vale, or highest val for sell
     '''
     counter = 0
-    print ('curr_valbz length ' +curr_valbz["buy"][counter])
-    print ('curr_vale length ' +curr_vale["buy"][0])
-
     while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
         vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
         counter += 1
-    
+
     counter = 0
+
     while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
         vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
         counter += 1
-
-
 
 
 def global_id_increment():
@@ -209,9 +203,10 @@ def main():
     # message. Sending a message in response to every exchange message will
     # cause a feedback loop where your bot's messages will quickly be
     # rate-limited and ignored. Please, don't do that!
+    vale = None
+    valbz = None
     while True:
-        vale = None
-        valbz = None
+
         message = exchange.read_message()
 
         # Some of the message types below happen infrequently and contain
@@ -238,6 +233,7 @@ def main():
                 valbz = message
             if message["symbol"] == "VALE":
                 vale = message
+
                 def best_price(side):
                     if message[side]:
                         return message[side][0][0]
