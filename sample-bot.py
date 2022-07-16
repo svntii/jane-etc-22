@@ -45,6 +45,7 @@ def bond_sell(exchange,curr_price, curr_size):
 
 
 def global_id_increment():
+    global GLOBALID 
     GLOBALID += 1
 
 def book_bond_check(message, exchange):
