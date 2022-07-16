@@ -207,6 +207,8 @@ def main():
     # cause a feedback loop where your bot's messages will quickly be
     # rate-limited and ignored. Please, don't do that!
     while True:
+        vale = None
+        valbz = None
         message = exchange.read_message()
 
         # Some of the message types below happen infrequently and contain
