@@ -88,10 +88,10 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     #     counter += 1
 
     if curr_valbz["sell"][0][0]+10 < curr_vale["buy"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1]//2)
+        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
     
     if curr_valbz["buy"][0][0]-10 > curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1]//2)
+        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
 
 def global_id_increment():
     global GLOBALID
