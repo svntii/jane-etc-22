@@ -43,9 +43,51 @@ def bond_buy(exchange, curr_price, curr_size):
 
 def bond_sell(exchange, curr_price, curr_size):
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
-                              price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
+                              price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
     response = exchange.read_message()
     print(response)
+
+
+
+def vale_buy(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
+                              price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+
+def vale_sell(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.SELL,
+                              price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+
+
+def val_check(exchange, curr_valbz, curr_vale, range_val):
+    '''
+        look at valbz
+            find the book value of valbz
+            check vale
+
+            if BUY of vale is less than valbz -> BUY (RANGE)
+            if SELL of vale > valbz -> SELL (RANGE)
+
+            RANGE:
+            
+            if the spread is wide try to get the lowest vale, or highest val for sell
+    '''
+    counter = 0
+    while curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
+        vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
+        counter += 1
+    
+    counter = 0
+    while curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
+        vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
+        counter += 1
+
+
 
 
 def global_id_increment():
@@ -128,8 +170,10 @@ def main():
             print(message)
         elif message["type"] == "book":
             print(message)
+            if message["symbol"] == "VALBZ":
+                valbz = message
             if message["symbol"] == "VALE":
-
+                vale = message
                 def best_price(side):
                     if message[side]:
                         return message[side][0][0]
@@ -141,13 +185,15 @@ def main():
 
                 if now > vale_last_print_time + 1:
                     vale_last_print_time = now
+
                     print(
                         {
                             "vale_bid_price": vale_bid_price,
                             "vale_ask_price": vale_ask_price,
                         }
                     )
-
+            if vale and valbz:
+                val_check(exchange, valbz, vale, 5)
 
 # ~~~~~============== PROVIDED CODE ==============~~~~~
 
