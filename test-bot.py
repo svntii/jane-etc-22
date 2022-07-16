@@ -20,9 +20,15 @@ import json
 team_name = "PRICKLYSCULPINS"
 GLOBALID = 0         # ORDER ID is: unique order id
 HOLDINGS = dict()
+OPENORDER = dict()
+
 HOLDINGS['bond'] = 0
 HOLDINGS['vale'] = 0
 HOLDINGS['valbz'] = 0
+
+OPENORDER['bond'] = 0
+OPENORDER['vale'] = 0
+OPENORDER['valbz'] = 0
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
@@ -40,7 +46,7 @@ HOLDINGS['valbz'] = 0
 
 
 def bond_buy(exchange, curr_price, curr_size):
-    HOLDINGS['bond'] += curr_size
+    OPENORDER['bond'] += curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.BUY,
                             price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
     response = exchange.read_message()
@@ -49,7 +55,7 @@ def bond_buy(exchange, curr_price, curr_size):
 
 
 def bond_sell(exchange, curr_price, curr_size):
-    HOLDINGS['bond'] -= curr_size
+    OPENORDER['bond'] -= curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
                             price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
     response = exchange.read_message()
@@ -57,7 +63,7 @@ def bond_sell(exchange, curr_price, curr_size):
 
 
 def vale_buy(exchange, curr_price, curr_size):
-    HOLDINGS['vale'] += curr_size
+    OPENORDER['vale'] += curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
                             price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
     response = exchange.read_message()
@@ -65,14 +71,14 @@ def vale_buy(exchange, curr_price, curr_size):
 
 
 def vale_sell(exchange, curr_price, curr_size):
-    HOLDINGS['vale'] -= curr_size
+    OPENORDER['vale'] -= curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.SELL,
                             price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
 def valbz_buy(exchange, curr_price, curr_size):
-    HOLDINGS['valbz'] += curr_size
+    OPENORDER['valbz'] += curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="VALBZ", dir=Dir.BUY,
                             price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
     response = exchange.read_message()
@@ -80,25 +86,27 @@ def valbz_buy(exchange, curr_price, curr_size):
 
 
 def valbz_sell(exchange, curr_price, curr_size):
-    HOLDINGS['valbz'] -= curr_size
+    OPENORDER['valbz'] -= curr_size
     exchange.send_add_message(order_id=GLOBALID, symbol="VALBZ", dir=Dir.SELL,
                             price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
 def valbz_to_vale(exchange, curr_price, curr_size):
-    vale_sell(exchange, curr_price, HOLDINGS['vale'])
-    HOLDINGS['valbz'] -= curr_size
-    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
-    response = exchange.read_message()
-    print(response)
+    if abs(OPENORDER['vale'] - HOLDINGS["vale"]) <= 10:
+    # vale_sell(exchange, curr_price, HOLDINGS['vale'])
+        OPENORDER['valbz'] -= curr_size
+        exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
+        response = exchange.read_message()
+        print(response)
 
 def vale_to_valbz(exchange, curr_price, curr_size):
-    valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
-    HOLDINGS['vale'] -= curr_size
-    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
-    response = exchange.read_message()
-    print(response)
+    # valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
+    if abs(OPENORDER['vale'] - HOLDINGS["vale"]) <= 10:
+        OPENORDER['vale'] -= curr_size
+        exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
+        response = exchange.read_message()
+        print(response)
 
 
 def val_check(exchange, curr_valbz, curr_vale, range_val):
@@ -273,6 +281,12 @@ def main():
             print(message)
         elif message["type"] == "fill":
             print(message)
+            if message["dir"] == 'buy':
+                HOLDINGS[message['symbol']] += message['size']
+                OPENORDER[message['symbol']] -= message['size']
+            if message["dir"] == 'sell':
+                HOLDINGS[message['symbol']] -= message['size']
+                OPENORDER[message['symbol']] += message['size']
             # exchange.send_add_message(
             #     order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
             # global_id_increment()
