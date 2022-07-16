@@ -314,28 +314,28 @@ def main():
             #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=ms_bid_price, size=1)
             #             sold_ms = False
             # if message["symbol"] == "WFC":
-                print(message)
-                wfc_bid_price = best_price("buy")
-                wfc_ask_price = best_price("sell")
-                if wfc_bid_price and wfc_ask_price:
-                    if not bought_wfc:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=wfc_bid_price, size=1)
-                        bought_wfc = True
-                        bought_wfc_price = wfc_bid_price
-                    elif wfc_ask_price > bought_wfc_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=wfc_ask_price, size=1)
-                        bought_wfc = False
-                    if not sold_wfc:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=wfc_ask_price, size=1)
-                        sold_wfc = True
-                        sold_wfc_price = wfc_ask_price
-                    elif wfc_bid_price < sold_wfc_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=wfc_bid_price, size=1)
-                        sold_wfc = False
+            #     print(message)
+            #     wfc_bid_price = best_price("buy")
+            #     wfc_ask_price = best_price("sell")
+            #     if wfc_bid_price and wfc_ask_price:
+            #         if not bought_wfc:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=wfc_bid_price, size=1)
+            #             bought_wfc = True
+            #             bought_wfc_price = wfc_bid_price
+            #         elif wfc_ask_price > bought_wfc_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=wfc_ask_price, size=1)
+            #             bought_wfc = False
+            #         if not sold_wfc:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=wfc_ask_price, size=1)
+            #             sold_wfc = True
+            #             sold_wfc_price = wfc_ask_price
+            #         elif wfc_bid_price < sold_wfc_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=wfc_bid_price, size=1)
+            #             sold_wfc = False
             # if message["symbol"] == "VALE":
 
             #     vale_bid_price = best_price("buy")
