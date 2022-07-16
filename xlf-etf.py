@@ -210,24 +210,25 @@ def main():
                 print(message)
                 xlf_bid_price = best_price("buy")
                 xlf_ask_price = best_price("sell")
-                if not bought_xlf:
-                    exchange.send_add_message(
-                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
-                    bought_xlf = True
-                    bought_xlf_price = xlf_bid_price
-                elif xlf_ask_price > bought_xlf_price:
-                    exchange.send_add_message(
-                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
-                    bought_xlf = False
-                if not sold_xlf:
-                    exchange.send_add_message(
-                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
-                    sold_xlf = True
-                    sold_xlf_price = xlf_ask_price
-                elif xlf_bid_price < sold_xlf_price:
-                    exchange.send_add_message(
-                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
-                    sold_xlf = False
+                if xlf_bid_price and xlf_ask_price:
+                    if not bought_xlf:
+                        exchange.send_add_message(
+                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
+                        bought_xlf = True
+                        bought_xlf_price = xlf_bid_price
+                    elif xlf_ask_price > bought_xlf_price:
+                        exchange.send_add_message(
+                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
+                        bought_xlf = False
+                    if not sold_xlf:
+                        exchange.send_add_message(
+                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
+                        sold_xlf = True
+                        sold_xlf_price = xlf_ask_price
+                    elif xlf_bid_price < sold_xlf_price:
+                        exchange.send_add_message(
+                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
+                        sold_xlf = False
             # if message["symbol"] == "VALE":
 
             #     vale_bid_price = best_price("buy")
