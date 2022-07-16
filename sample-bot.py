@@ -88,7 +88,7 @@ def main():
     exchange.send_add_message(
         order_id=1, symbol="BOND", dir=Dir.BUY, price=1001, size=1)  # TODO BOOK read
     print('\n BOUGHT SOMETHING')
-    print('check if empy'+ exchange.read_message())
+    print(exchange.read_message())
 
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
