@@ -88,13 +88,13 @@ def valbz_sell(exchange, curr_price, curr_size):
 
 def valbz_to_vale(exchange, curr_price, curr_size):
     vale_sell(exchange, curr_price, HOLDINGS['vale'])
-    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size):  # SEND A SELL VALE FOR curr_price
+    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
 def vale_to_valbz(exchange, curr_price, curr_size):
     valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
-    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size):  # SEND A SELL VALE FOR curr_price
+    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
