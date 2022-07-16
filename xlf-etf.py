@@ -202,8 +202,9 @@ def main():
             print(message)
         elif message["type"] == "fill":
             print(message)
-            exchange.send_add_message(
-                order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
+            if message["symbol"] == "BOND":
+                exchange.send_add_message(
+                    order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
         elif message["type"] == "book":
             if message["symbol"] == "XLF":
                 print(message)
