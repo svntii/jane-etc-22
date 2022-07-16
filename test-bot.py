@@ -13,7 +13,7 @@ import time
 import socket
 import json
 
-from urllib import response
+
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # Replace "REPLACEME" with your team name!
