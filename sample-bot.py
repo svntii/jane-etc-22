@@ -33,62 +33,66 @@ GLOBALID = 0         # ORDER ID is: unique order id
 # any bond value less than 1000 ---> buy
 # if we have bonds worth less than buyer demand ---> sell [more than 1000]
 
-def bond_buy(exchange,curr_price, curr_size):
-    exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=curr_price, size=curr_size) #SEND A BUY BOND FOR curr_price
+
+def bond_buy(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.BUY,
+                              price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
     response = exchange.read_message()
     print(response)
 
-def bond_sell(exchange,curr_price, curr_size):
-    exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=curr_price, size=curr_size) #SEND A BUY BOND FOR curr_price
+
+def bond_sell(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
+                              price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
     response = exchange.read_message()
     print(response)
 
 
 def global_id_increment():
-    global GLOBALID 
+    global GLOBALID
     GLOBALID += 1
+
 
 def book_bond_check(message, exchange):
     if message["symbol"] == "BOND":
         if message["sell"]:
             counter = 0
             while message["sell"][counter][0] < 1000:
-                bond_buy(exchange, message["sell"][counter][0], message["sell"][counter][1]//2)
-                counter+=1
+                bond_buy(exchange, message["sell"][counter]
+                         [0], message["sell"][counter][1]//2)
+                counter += 1
         if message["buy"]:
             counter = 0
             while message["buy"][counter][0] >= 1000:
-                bond_sell(exchange, message["buy"][counter][0], message["buy"][counter][1]//2)
-                counter+=1
+                bond_sell(exchange, message["buy"][counter]
+                          [0], message["buy"][counter][1]//2)
+                counter += 1
 
 
 def main():
     args = parse_arguments()
 
-    exchange = ExchangeConnection(args=args) # create socket with the server
+    exchange = ExchangeConnection(args=args)  # create socket with the server
 
     # Store and print the "hello" message received from the exchange. This
     # contains useful information about your positions. Normally you start with
     # all positions at zero, but if you reconnect during a round, you might
     # have already bought/sold symbols and have non-zero positions.
     hello_message = exchange.read_message()
-    print("First message from exchange:", hello_message)# read in response
+    print("First message from exchange:", hello_message)  # read in response
 
     # Send an order for BOND at a good price, but it is low enough that it is
     # unlikely it will be traded against. Maybe there is a better price to
     # pick? Also, you will need to send more orders over time.
 
-
-    exchange.send_add_message(order_id=1, symbol="BOND", dir=Dir.BUY, price=990, size=1) #TODO BOOK read
-
-
-
+    exchange.send_add_message(
+        order_id=1, symbol="BOND", dir=Dir.BUY, price=990, size=1)  # TODO BOOK read
 
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
     # of the VALE market.
-    vale_bid_price, vale_ask_price = None, None                 #TODO delete
-    vale_last_print_time = time.time()                          #TODO delete
+    vale_bid_price, vale_ask_price = None, None  # TODO delete
+    vale_last_print_time = time.time()  # TODO delete
 
     # Here is the main loop of the program. It will continue to read and
     # process messages in a loop until a "close" message is received. You
@@ -121,6 +125,7 @@ def main():
         elif message["type"] == "fill":
             print(message)
         elif message["type"] == "book":
+            print(message)
             if message["symbol"] == "VALE":
 
                 def best_price(side):
@@ -159,7 +164,8 @@ class ExchangeConnection:
         self.message_timestamps = deque(maxlen=500)
         self.exchange_hostname = args.exchange_hostname
         self.port = args.port
-        self.exchange_socket = self._connect(add_socket_timeout=args.add_socket_timeout)
+        self.exchange_socket = self._connect(
+            add_socket_timeout=args.add_socket_timeout)
 
         self._write_message({"type": "hello", "team": team_name.upper()})
 
