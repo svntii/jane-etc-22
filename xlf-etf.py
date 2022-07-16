@@ -119,18 +119,18 @@ def main():
     sold_val = False
     bought_val_price = 0
     sold_val_price = 0
-    bought_gs = False
-    sold_gs = False
-    bought_gs_price = 0
-    sold_gs_price = 0
-    bought_ms = False
-    sold_ms = False
-    bought_ms_price = 0
-    sold_ms_price = 0
-    bought_wfc = False
-    sold_wfc = False
-    bought_wfc_price = 0
-    sold_wfc_price = 0
+    # bought_gs = False
+    # sold_gs = False
+    # bought_gs_price = 0
+    # sold_gs_price = 0
+    # bought_ms = False
+    # sold_ms = False
+    # bought_ms_price = 0
+    # sold_ms_price = 0
+    # bought_wfc = False
+    # sold_wfc = False
+    # bought_wfc_price = 0
+    # sold_wfc_price = 0
     exchange.send_add_message(
         order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
 
@@ -231,7 +231,7 @@ def main():
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=val_bid_price, size=1)
                         bought_val = True
                         bought_val_price = val_bid_price
-                    elif val_ask_price > bought_val_price:
+                    elif val_ask_price > (bought_val_price + 1):
                         exchange.send_add_message(
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=val_ask_price, size=1)
                         bought_val = False
@@ -240,7 +240,7 @@ def main():
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=val_ask_price, size=1)
                         sold_val = True
                         sold_val_price = val_ask_price
-                    elif val_bid_price < sold_val_price:
+                    elif val_bid_price < (sold_val_price - 1):
                         exchange.send_add_message(
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=val_bid_price, size=1)
                         sold_val = False
@@ -254,7 +254,7 @@ def main():
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
                         bought_xlf = True
                         bought_xlf_price = xlf_bid_price
-                    elif xlf_ask_price > bought_xlf_price:
+                    elif xlf_ask_price > (bought_xlf_price + 1):
                         exchange.send_add_message(
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
                         bought_xlf = False
@@ -263,57 +263,57 @@ def main():
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
                         sold_xlf = True
                         sold_xlf_price = xlf_ask_price
-                    elif xlf_bid_price < sold_xlf_price:
+                    elif xlf_bid_price < (sold_xlf_price - 1):
                         exchange.send_add_message(
                             order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
                         sold_xlf = False
-            if message["symbol"] == "GS":
-                print(message)
-                gs_bid_price = best_price("buy")
-                gs_ask_price = best_price("sell")
-                if gs_bid_price and gs_ask_price:
-                    if not bought_gs:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=gs_bid_price, size=1)
-                        bought_gs = True
-                        bought_gs_price = gs_bid_price
-                    elif gs_ask_price > bought_gs_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=gs_ask_price, size=1)
-                        bought_gs = False
-                    if not sold_gs:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=gs_ask_price, size=1)
-                        sold_gs = True
-                        sold_gs_price = gs_ask_price
-                    elif gs_bid_price < sold_gs_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=gs_bid_price, size=1)
-                        sold_gs = False
-            if message["symbol"] == "MS":
-                print(message)
-                ms_bid_price = best_price("buy")
-                ms_ask_price = best_price("sell")
-                if ms_bid_price and ms_ask_price:
-                    if not bought_ms:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=ms_bid_price, size=1)
-                        bought_ms = True
-                        bought_ms_price = ms_bid_price
-                    elif ms_ask_price > bought_ms_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=ms_ask_price, size=1)
-                        bought_ms = False
-                    if not sold_ms:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=ms_ask_price, size=1)
-                        sold_ms = True
-                        sold_ms_price = ms_ask_price
-                    elif ms_bid_price < sold_ms_price:
-                        exchange.send_add_message(
-                            order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=ms_bid_price, size=1)
-                        sold_ms = False
-            if message["symbol"] == "WFC":
+            # if message["symbol"] == "GS":
+            #     print(message)
+            #     gs_bid_price = best_price("buy")
+            #     gs_ask_price = best_price("sell")
+            #     if gs_bid_price and gs_ask_price:
+            #         if not bought_gs:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=gs_bid_price, size=1)
+            #             bought_gs = True
+            #             bought_gs_price = gs_bid_price
+            #         elif gs_ask_price > bought_gs_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=gs_ask_price, size=1)
+            #             bought_gs = False
+            #         if not sold_gs:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=gs_ask_price, size=1)
+            #             sold_gs = True
+            #             sold_gs_price = gs_ask_price
+            #         elif gs_bid_price < sold_gs_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=gs_bid_price, size=1)
+            #             sold_gs = False
+            # if message["symbol"] == "MS":
+            #     print(message)
+            #     ms_bid_price = best_price("buy")
+            #     ms_ask_price = best_price("sell")
+            #     if ms_bid_price and ms_ask_price:
+            #         if not bought_ms:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=ms_bid_price, size=1)
+            #             bought_ms = True
+            #             bought_ms_price = ms_bid_price
+            #         elif ms_ask_price > bought_ms_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=ms_ask_price, size=1)
+            #             bought_ms = False
+            #         if not sold_ms:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=ms_ask_price, size=1)
+            #             sold_ms = True
+            #             sold_ms_price = ms_ask_price
+            #         elif ms_bid_price < sold_ms_price:
+            #             exchange.send_add_message(
+            #                 order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=ms_bid_price, size=1)
+            #             sold_ms = False
+            # if message["symbol"] == "WFC":
                 print(message)
                 wfc_bid_price = best_price("buy")
                 wfc_ask_price = best_price("sell")
