@@ -12,7 +12,7 @@ from pickle import GLOBAL
 import time
 import socket
 import json
-from tkinter.tix import DirTree
+
 from urllib import response
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
