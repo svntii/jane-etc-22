@@ -77,13 +77,13 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     '''
     print("print in here")
     counter = 0
-    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
+    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] > curr_vale["buy"][0][0]:
         vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
         counter += 1
 
     counter = 0
 
-    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
+    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] < curr_vale["sell"][0][0]:
         vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
         counter += 1
 
