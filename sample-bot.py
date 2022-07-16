@@ -86,10 +86,12 @@ def main():
     # pick? Also, you will need to send more orders over time.
 
     exchange.send_add_message(
-        order_id=1, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
+    global_id_increment()
 
     exchange.send_add_message(
-        order_id=2, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
+        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
+    global_id_increment()
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
     # of the VALE market.
@@ -126,6 +128,12 @@ def main():
             print(message)
         elif message["type"] == "fill":
             print(message)
+            exchange.send_add_message(
+                order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
+            global_id_increment()
+            exchange.send_add_message(
+                order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
+            global_id_increment()
         elif message["type"] == "book":
             if message["symbol"] == "VALE":
 
