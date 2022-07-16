@@ -50,7 +50,7 @@ def bond_sell(exchange, curr_price, curr_size):
 
 def vale_buy(exchange, curr_price, curr_size):
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
-                              price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
+                            price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
@@ -76,17 +76,22 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
             if the spread is wide try to get the lowest vale, or highest val for sell
     '''
     print("print in here")
-    counter = 0
-    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] > curr_vale["buy"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][0][1]//2)
-        counter += 1
+    # counter = 0
+    # while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] > curr_vale["buy"][0][0]:
+    #     vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][0][1]//2)
+    #     counter += 1
 
-    counter = 0
+    # counter = 0
 
-    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] < curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][0][1]//2)
-        counter += 1
+    # while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] < curr_vale["sell"][0][0]:
+    #     vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][0][1]//2)
+    #     counter += 1
 
+    if curr_valbz["sell"][0][0]+10 < curr_vale["buy"][0][0]:
+        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
+    
+    if curr_valbz["buy"][0][0]-10 > curr_vale["sell"][0][0]:
+        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
 
 def global_id_increment():
     global GLOBALID
