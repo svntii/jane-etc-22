@@ -230,7 +230,7 @@ def main():
                 order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
             global_id_increment()
         elif message["type"] == "book":
-            print(message)
+            # print(message)
             if message["symbol"] == "VALBZ":
                 valbz = message
             if message["symbol"] == "VALE":
