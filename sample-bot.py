@@ -57,7 +57,7 @@ def book_bond_check(message, exchange):
     if message["symbol"] == "BOND":
         if message["sell"]:
             counter = 0
-            while message["sell"][counter][0] < 1000:
+            while message["sell"][counter][0] < 1001:
                 bond_buy(exchange, message["sell"][counter]
                          [0], message["sell"][counter][1]//2)
                 counter += 1
@@ -90,7 +90,6 @@ def main():
 
     exchange.send_add_message(
         order_id=1, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
-
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
     # of the VALE market.
