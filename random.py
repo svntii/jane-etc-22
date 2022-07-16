@@ -12,6 +12,7 @@ from pickle import GLOBAL
 import time
 import socket
 import json
+from urllib import response
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # Replace "REPLACEME" with your team name!
@@ -205,7 +206,7 @@ def main():
                 exchange.send_add_message(
                     order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
         elif message["type"] == "book":
-            if message["symbol"] == "XLF":
+            if message["symbol"] == "WFC":
                 print(message)
                 xlf_bid_price = best_price("buy")
                 xlf_ask_price = best_price("sell")
