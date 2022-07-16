@@ -77,14 +77,14 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     '''
     print("print in here")
     counter = 0
-    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
+    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] > curr_vale["buy"][0][0]:
+        vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][0][1]//2)
         counter += 1
 
     counter = 0
 
-    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
+    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] < curr_vale["sell"][0][0]:
+        vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][0][1]//2)
         counter += 1
 
 
@@ -125,67 +125,67 @@ def main():
     # unlikely it will be traded against. Maybe there is a better price to
     # pick? Also, you will need to send more orders over time.
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=998, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=998, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=997, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=997, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=3)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=3)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=5)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=5)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=10)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=10)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=25)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=25)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=50)  # TODO BOOK read
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=50)  # TODO BOOK read
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1002, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1002, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1003, size=1)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1003, size=1)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=3)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=3)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=5)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=5)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=10)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=10)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=25)  # TODO BOOK read
-    global_id_increment()
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=25)  # TODO BOOK read
+    # global_id_increment()
 
-    exchange.send_add_message(
-        order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=50)  # TODO BOOK read
+    # exchange.send_add_message(
+    #     order_id=GLOBALID, symbol="BOND", dir=Dir.SELL, price=1001, size=50)  # TODO BOOK read
     # Set up some variables to track the bid and ask price of a symbol. Right
     # now this doesn't track much information, but it's enough to get a sense
     # of the VALE market.
@@ -225,9 +225,9 @@ def main():
             print(message)
         elif message["type"] == "fill":
             print(message)
-            exchange.send_add_message(
-                order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
-            global_id_increment()
+            # exchange.send_add_message(
+            #     order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
+            # global_id_increment()
         elif message["type"] == "book":
             # print(message)
             if message["symbol"] == "VALBZ":
