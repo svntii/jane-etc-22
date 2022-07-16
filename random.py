@@ -205,7 +205,7 @@ def main():
                 exchange.send_add_message(
                     order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
         elif message["type"] == "book":
-            if message["symbol"] == "WFC":
+            if message["symbol"] == "VALE":
                 print(message)
                 xlf_bid_price = best_price("buy")
                 xlf_ask_price = best_price("sell")
