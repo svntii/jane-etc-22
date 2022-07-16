@@ -12,12 +12,17 @@ from pickle import GLOBAL
 import time
 import socket
 import json
+from tkinter.tix import DirTree
 from urllib import response
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # Replace "REPLACEME" with your team name!
 team_name = "PRICKLYSCULPINS"
 GLOBALID = 0         # ORDER ID is: unique order id
+HOLDINGS = dict()
+HOLDINGS['bond'] = 0
+HOLDINGS['vale'] = 0
+HOLDINGS['valbz'] = 0
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
@@ -35,20 +40,24 @@ GLOBALID = 0         # ORDER ID is: unique order id
 
 
 def bond_buy(exchange, curr_price, curr_size):
+    HOLDINGS['bond'] += 1
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.BUY,
-                              price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
+                            price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
     response = exchange.read_message()
+    
     print(response)
 
 
 def bond_sell(exchange, curr_price, curr_size):
+    HOLDINGS['bond'] -= 1
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
-                              price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
+                            price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
     response = exchange.read_message()
     print(response)
 
 
 def vale_buy(exchange, curr_price, curr_size):
+    HOLDINGS['vale'] += 1
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
                             price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
     response = exchange.read_message()
@@ -56,8 +65,36 @@ def vale_buy(exchange, curr_price, curr_size):
 
 
 def vale_sell(exchange, curr_price, curr_size):
+    HOLDINGS['vale'] -= 1
     exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.SELL,
-                              price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
+                            price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+def valbz_buy(exchange, curr_price, curr_size):
+    HOLDINGS['valbz'] += 1
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALBZ", dir=Dir.BUY,
+                            price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+
+def valbz_sell(exchange, curr_price, curr_size):
+    HOLDINGS['valbz'] -= 1
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALBZ", dir=Dir.SELL,
+                            price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+def valbz_to_vale(exchange, curr_price, curr_size):
+    vale_sell(exchange, curr_price, HOLDINGS['vale'])
+    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size):  # SEND A SELL VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+def vale_to_valbz(exchange, curr_price, curr_size):
+    valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
+    exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size):  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
@@ -88,10 +125,14 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     #     counter += 1
 
     if curr_valbz["sell"][0][0]+10 < curr_vale["buy"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
+        valbz_buy(exchange, curr_valbz["sell"][0][0] , curr_vale["sell"][0][1])
+        valbz_to_vale(exchange, curr_vale["buy"][0][0], curr_vale["sell"][0][1])
+        vale_sell(exchange, curr_vale["buy"][0][0] , curr_vale["buy"][0][1])
     
     if curr_valbz["buy"][0][0]-10 > curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][0][0] - range_val, curr_vale["buy"][0][1])
+        vale_buy(exchange, curr_vale["sell"][0][0] - range_val, curr_vale["sell"][0][1])
+        vale_to_valbz(exchange, curr_valbz["buy"][0][0], curr_vale["sell"][0][1])
+        valbz_sell(exchange, curr_valbz["buy"][0][0] , curr_valbz["buy"][0][1])
 
 def global_id_increment():
     global GLOBALID
@@ -104,13 +145,13 @@ def book_bond_check(message, exchange):
             counter = 0
             while message["sell"][counter][0] < 1001:
                 bond_buy(exchange, message["sell"][counter]
-                         [0], message["sell"][counter][1]//2)
+                        [0], message["sell"][counter][1]//2)
                 counter += 1
         if message["buy"]:
             counter = 0
             while message["buy"][counter][0] >= 1000:
                 bond_sell(exchange, message["buy"][counter]
-                          [0], message["buy"][counter][1]//2)
+                        [0], message["buy"][counter][1]//2)
                 counter += 1
 
 
@@ -309,6 +350,7 @@ class ExchangeConnection:
 
     def send_convert_message(self, order_id: int, symbol: str, dir: Dir, size: int):
         """Convert between related symbols"""
+        global_id_increment()
         self._write_message(
             {
                 "type": "convert",
