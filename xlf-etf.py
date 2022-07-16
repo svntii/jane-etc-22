@@ -112,7 +112,10 @@ def main():
     # Send an order for BOND at a good price, but it is low enough that it is
     # unlikely it will be traded against. Maybe there is a better price to
     # pick? Also, you will need to send more orders over time.
-
+    bought_xlf = False
+    sold_xlf = False
+    bought_xlf_price = 0
+    sold_xlf_price = 0
     exchange.send_add_message(
         order_id=GLOBALID, symbol="BOND", dir=Dir.BUY, price=999, size=1)  # TODO BOOK read
 
@@ -204,6 +207,26 @@ def main():
         elif message["type"] == "book":
             if message["symbol"] == "XLF":
                 print(message)
+                xlf_bid_price = best_price("buy")
+                xlf_ask_price = best_price("sell")
+                if not bought_xlf:
+                    exchange.send_add_message(
+                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
+                    bought_xlf = True
+                    bought_xlf_price = xlf_bid_price
+                elif xlf_ask_price > bought_xlf_price:
+                    exchange.send_add_message(
+                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
+                    bought_xlf = False
+                if not sold_xlf:
+                    exchange.send_add_message(
+                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.SELL, price=xlf_ask_price, size=1)
+                    sold_xlf = True
+                    sold_xlf_price = xlf_ask_price
+                elif xlf_bid_price < sold_xlf_price:
+                    exchange.send_add_message(
+                        order_id=GLOBALID, symbol=message["symbol"], dir=Dir.BUY, price=xlf_bid_price, size=1)
+                    sold_xlf = False
             # if message["symbol"] == "VALE":
 
             #     vale_bid_price = best_price("buy")
