@@ -78,12 +78,15 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
             if the spread is wide try to get the lowest vale, or highest val for sell
     '''
     counter = 0
-    while curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
+    print ('curr_valbz length ' +curr_valbz["buy"][counter])
+    print ('curr_vale length ' +curr_vale["buy"][0])
+
+    while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
         vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
         counter += 1
     
     counter = 0
-    while curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
+    while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
         vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
         counter += 1
 
