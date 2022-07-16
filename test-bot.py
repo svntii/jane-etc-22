@@ -43,7 +43,21 @@ def bond_buy(exchange, curr_price, curr_size):
 
 def bond_sell(exchange, curr_price, curr_size):
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
-                              price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
+                              price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+
+def vale_buy(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.BUY,
+                              price=curr_price, size=curr_size)  # SEND A BUY VALE FOR curr_price
+    response = exchange.read_message()
+    print(response)
+
+
+def vale_sell(exchange, curr_price, curr_size):
+    exchange.send_add_message(order_id=GLOBALID, symbol="VALE", dir=Dir.SELL,
+                              price=curr_price, size=curr_size)  # SEND A SELL VALE FOR curr_price
     response = exchange.read_message()
     print(response)
 
@@ -64,15 +78,13 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     print("print in here")
     counter = 0
     while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] < curr_vale["buy"][0][0]:
-        vale_buy(exchange, curr_valbz["buy"][counter]
-                 [0] - range_val, curr_vale["buy"][counter][1]//2)
+        vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][counter][1]//2)
         counter += 1
 
     counter = 0
 
     while counter < len(curr_valbz["sell"]) and curr_valbz["sell"][counter][0] > curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_valbz["sell"][counter]
-                 [0] + range_val, curr_vale["sell"][counter][1]//2)
+        vale_buy(exchange, curr_valbz["sell"][counter][0] + range_val, curr_vale["sell"][counter][1]//2)
         counter += 1
 
 
@@ -192,7 +204,10 @@ def main():
     # message. Sending a message in response to every exchange message will
     # cause a feedback loop where your bot's messages will quickly be
     # rate-limited and ignored. Please, don't do that!
+    vale = None
+    valbz = None
     while True:
+
         message = exchange.read_message()
 
         # Some of the message types below happen infrequently and contain
@@ -214,7 +229,11 @@ def main():
                 order_id=GLOBALID, symbol=message["symbol"], dir=message["dir"], price=message["price"], size=message["size"])  # TODO BOOK read
             global_id_increment()
         elif message["type"] == "book":
+            # print(message)
+            if message["symbol"] == "VALBZ":
+                valbz = message
             if message["symbol"] == "VALE":
+                vale = message
 
                 def best_price(side):
                     if message[side]:
@@ -227,13 +246,16 @@ def main():
 
                 if now > vale_last_print_time + 1:
                     vale_last_print_time = now
+
                     print(
                         {
                             "vale_bid_price": vale_bid_price,
                             "vale_ask_price": vale_ask_price,
                         }
                     )
-
+            if vale and valbz:
+                print('valcheck')
+                val_check(exchange, valbz, vale, 5)
 
 # ~~~~~============== PROVIDED CODE ==============~~~~~
 
