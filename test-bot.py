@@ -22,13 +22,14 @@ GLOBALID = 0         # ORDER ID is: unique order id
 HOLDINGS = dict()
 OPENORDER = dict()
 
-HOLDINGS['bond'] = 0
-HOLDINGS['vale'] = 0
-HOLDINGS['valbz'] = 0
+HOLDINGS['bond'] = []
+HOLDINGS['vale'] = []
+HOLDINGS['valbz'] = []
 
-OPENORDER['bond'] = 0
-OPENORDER['vale'] = 0
-OPENORDER['valbz'] = 0
+OPENORDER['bond'] = []
+OPENORDER['vale'] = []
+OPENORDER['valbz'] = []
+
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
@@ -46,7 +47,7 @@ OPENORDER['valbz'] = 0
 
 
 def bond_buy(exchange, curr_price, curr_size):
-    OPENORDER['bond'] += curr_size
+    OPENORDER['bond'].append(GLOBALID)
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.BUY,
                             price=curr_price, size=curr_size)  # SEND A BUY BOND FOR curr_price
     response = exchange.read_message()
@@ -55,7 +56,7 @@ def bond_buy(exchange, curr_price, curr_size):
 
 
 def bond_sell(exchange, curr_price, curr_size):
-    OPENORDER['bond'] -= curr_size
+    OPENORDER['bond'].append(GLOBALID)
     exchange.send_add_message(order_id=GLOBALID, symbol="BOND", dir=Dir.SELL,
                             price=curr_price, size=curr_size)  # SEND A SELL BOND FOR curr_price
     response = exchange.read_message()
@@ -93,20 +94,31 @@ def valbz_sell(exchange, curr_price, curr_size):
     print(response)
 
 def valbz_to_vale(exchange, curr_price, curr_size):
-    if abs(OPENORDER['vale'] - HOLDINGS["vale"]) <= 10:
+    if abs(len(OPENORDER['vale']) - len(HOLDINGS["vale"])) <= 10:
     # vale_sell(exchange, curr_price, HOLDINGS['vale'])
         OPENORDER['valbz'] -= curr_size
         exchange.send_convert_message(order_id=GLOBALID, symbol= "VALBZ", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
         response = exchange.read_message()
         print(response)
+    else:
+        clear_open(exchange)
+
+def clear_open(exchange):
+    # this would cancel all open orders
+    for orders,ids in OPENORDER.values():
+        exchange.send_cancel_message(ids)
+    print("all open orders done")
+
 
 def vale_to_valbz(exchange, curr_price, curr_size):
     # valbz_sell(exchange, curr_price, HOLDINGS['valbz'])
-    if abs(OPENORDER['valbz'] - HOLDINGS["valbz"]) <= 10:
+    if abs(len(OPENORDER['valbz']) - len(HOLDINGS["valbz"])) <= 10:
         OPENORDER['vale'] -= curr_size
         exchange.send_convert_message(order_id=GLOBALID, symbol= "VALE", dir=Dir.SELL, size=curr_size)  # SEND A SELL VALE FOR curr_price
         response = exchange.read_message()
         print(response)
+    else:
+        clear_open(exchange)
 
 
 def val_check(exchange, curr_valbz, curr_vale, range_val):
@@ -122,7 +134,7 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
 
             if the spread is wide try to get the lowest vale, or highest val for sell
     '''
-    print("print in here")
+    # print("print in here")
     # counter = 0
     # while counter < len(curr_valbz["buy"]) and curr_valbz["buy"][counter][0] > curr_vale["buy"][0][0]:
     #     vale_buy(exchange, curr_valbz["buy"][counter][0] - range_val, curr_vale["buy"][0][1]//2)
@@ -135,14 +147,14 @@ def val_check(exchange, curr_valbz, curr_vale, range_val):
     #     counter += 1
 
     if curr_valbz["sell"][0][0]+10 < curr_vale["buy"][0][0]:
-        valbz_buy(exchange, curr_valbz["sell"][0][0] , curr_vale["sell"][0][1])
-        valbz_to_vale(exchange, curr_vale["buy"][0][0], curr_vale["sell"][0][1])
-        vale_sell(exchange, curr_vale["buy"][0][0] , curr_vale["buy"][0][1])
+        valbz_buy(exchange, curr_valbz["sell"][0][0] , 1)
+        valbz_to_vale(exchange, curr_vale["buy"][0][0], 1)
+        vale_sell(exchange, curr_vale["buy"][0][0] , 1)
     
     if curr_valbz["buy"][0][0]-10 > curr_vale["sell"][0][0]:
-        vale_buy(exchange, curr_vale["sell"][0][0] - range_val, curr_vale["sell"][0][1])
-        vale_to_valbz(exchange, curr_valbz["buy"][0][0], curr_vale["sell"][0][1])
-        valbz_sell(exchange, curr_valbz["buy"][0][0] , curr_valbz["buy"][0][1])
+        vale_buy(exchange, curr_vale["sell"][0][0] - range_val, 1)
+        vale_to_valbz(exchange, curr_valbz["buy"][0][0], 1)
+        valbz_sell(exchange, curr_valbz["buy"][0][0] , 1)
 
 def global_id_increment():
     global GLOBALID
@@ -282,7 +294,7 @@ def main():
         elif message["type"] == "fill":
             print(message)
             if message["dir"] == 'buy':
-                HOLDINGS[message['symbol']] += message['size']
+                HOLDINGS[message['symbol']].append(message["order_id"])
                 OPENORDER[message['symbol']] -= message['size']
             if message["dir"] == 'sell':
                 HOLDINGS[message['symbol']] -= message['size']
@@ -309,14 +321,14 @@ def main():
                 if now > vale_last_print_time + 1:
                     vale_last_print_time = now
 
-                    print(
-                        {
-                            "vale_bid_price": vale_bid_price,
-                            "vale_ask_price": vale_ask_price,
-                        }
-                    )
+                    # print(
+                    #     {
+                    #         "vale_bid_price": vale_bid_price,
+                    #         "vale_ask_price": vale_ask_price,
+                    #     }
+                    # )
             if vale and valbz:
-                print('valcheck')
+                # print('valcheck')
                 val_check(exchange, valbz, vale, 5)
 
 # ~~~~~============== PROVIDED CODE ==============~~~~~
